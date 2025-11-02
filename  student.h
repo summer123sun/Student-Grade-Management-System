@@ -41,7 +41,6 @@ void updateSubjectScore(int index, const char* subjectName, float* subjectScore)
 void calculateBasicStatistics();            // 计算平均分、最高分、最低分等基础统计
 void calculateSubjectStatistics();          // 计算各单科平均分、最高分、最低分
 void calculateScoreDistribution();          // 统计各分数段人数及百分比
-void displayBarChart(const char* label, int count, int total); // 用“条形图”形式展示统计结果
 void displayRankings();                     // 按总分/平均分排序并显示排行榜
 void calculateClassStatistics();            // 计算班级整体指标（标准差、及格率等）
 void saveToFile(const char* filename);      // 将当前数据持久化到指定文件

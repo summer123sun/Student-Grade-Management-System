@@ -4,7 +4,7 @@
 #include  <stdio.h>
 #include <string.h>
 #include " student.h"
-#include <time.h>
+
 
 //全局变量定义
 Student students[MAX_STUDENTS];
@@ -42,51 +42,55 @@ void calculateAllStudentsTotal() {
 }
 //添加学生
 void addStudent() {
-    if (studentCount >= MAX_STUDENTS)
-    {
-        printf("错误：学生数量已达到上限%d!\n",MAX_STUDENTS);
-        return;
-    }
-
-    Student newStudent;
-
-    printf("\n--- 添加新学生---\n");
-
-    //输入学号
-    printf("请输入学号:");
-    scanf("%d",&newStudent.id);
-
-    // 检查学号是否重复
-    for (int i = 0; i<studentCount;i++) {
-        if (students[i].id == newStudent.id) {
-            printf("错误：学号%d已存在！\n",newStudent.id);
+    char choice;
+    do {
+        if (studentCount >= MAX_STUDENTS)
+        {
+            printf("错误：学生数量已达到上限%d!\n",MAX_STUDENTS);
+            return;
         }
-    }
-    //输入姓名
-    printf("请输入姓名:");
-    scanf("%s",newStudent.name);
+        Student newStudent;
 
-    //输入班级
-    printf("请输入班级");
-    scanf("%s",newStudent.className);
+        printf("\n--- 添加新学生---\n");
+        //输入学号
+        printf("请输入学号:");
+        scanf("%d",&newStudent.id);
 
-    // 使用辅助函数输入各科成绩
-    printf("\n--- 请输入各科成绩 ---\n");
-    newStudent.chinese = getValidScore("语文");
-    newStudent.math = getValidScore("数学");
-    newStudent.english = getValidScore("英语");
-    newStudent.music = getValidScore("音乐");
-    newStudent.physical = getValidScore("体育");
+        // 检查学号是否重复
+        for (int i = 0; i<studentCount;i++) {
+            if (students[i].id == newStudent.id) {
+                printf("错误：学号%d已存在！\n",newStudent.id);
+                return;
+            }
+        }
+        //输入姓名
+        printf("请输入姓名:");
+        scanf("%s",newStudent.name);
 
-    // 计算总分和平均分 - 新增
-    calculateStudentTotal(&newStudent);
+        //输入班级
+        printf("请输入班级");
+        scanf("%s",newStudent.className);
 
-    //添加到数组
-    students[studentCount] = newStudent;
-    studentCount++;
-    printf("成功添加学生：%s(学号：%d,班级:%s)\n"
-        ,newStudent.name,newStudent.id,newStudent.className);
+        // 使用辅助函数输入各科成绩
+        printf("\n--- 请输入各科成绩 ---\n");
+        newStudent.chinese = getValidScore("语文");
+        newStudent.math = getValidScore("数学");
+        newStudent.english = getValidScore("英语");
+        newStudent.music = getValidScore("音乐");
+        newStudent.physical = getValidScore("体育");
 
+        // 计算总分和平均分 - 新增
+        calculateStudentTotal(&newStudent);
+
+        //添加到数组
+        students[studentCount] = newStudent;
+        studentCount++;
+        printf("成功添加学生：%s(学号：%d,班级:%s)\n"
+            ,newStudent.name,newStudent.id,newStudent.className);
+        printf("\n继续添加学生？(y/n):");
+        scanf(" %c",&choice);
+
+    } while(choice == 'y' || choice =='Y');
 }
 //显示所有学生信息
 void displayAllStudents() {
@@ -99,13 +103,13 @@ void displayAllStudents() {
     printf("学生总数: %d\n", studentCount);
 
     // 打印表头
-    printf("┌──────┬──────────────┬────────────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐\n");
-    printf("│ 学号  │     姓名      │    班级    │ 语文 │ 数学 │ 英语 │ 音乐 │ 体育 │ 总分 │ 平均分       │      │\n");
+    printf("┌──────┬──────────────┬────────────┬──────┬──────┬──────┬──────┬──────┬──────┬──────┐\n");
+    printf("│ 学号  │     姓名      │    班级    │ 语文   │ 数学 │ 英语  │ 音乐 │ 体育   │ 总分   平均分 │\n");
     printf("├──────┼──────────────┼────────────┼──────┼──────┼──────┼──────┼──────┼──────┼──────┤\n");
 
     // 打印每个学生的信息
     for (int i = 0; i < studentCount; i++) {
-        printf("│ %4d │ %-12s │ %-10s │ %4.1f │ %4.1f │ %4.1f │ %4.1f │ %4.1f │ %4.1f │ %5.1f │\n",
+        printf("│ %4d │ %-12s │  %-10s │ %4.1f │ %4.1f │ %4.1f │ %4.1f │ %4.1f │ %4.1f │ %5.1f│\n",
                students[i].id,
                students[i].name,
                students[i].className,
@@ -440,7 +444,7 @@ void deleteStudent() {
     }
 
     // 显示要删除的学生完整信息
-    printf("\n??  即将删除以下学生信息:\n");
+    printf("\n 即将删除以下学生信息:\n");
     displayStudentDetail(foundIndex);
 
     // 确认删除
@@ -692,35 +696,8 @@ void calculateScoreDistribution() {
     printf("中等(70-79):  %2d人 (%5.1f%%)\n", mediumAll,    (float)mediumAll/studentCount*100);
     printf("及格(60-69):  %2d人 (%5.1f%%)\n", passAll,      (float)passAll/studentCount*100);
     printf("不及格(0-59): %2d人 (%5.1f%%)\n", failAll,      (float)failAll/studentCount*100);
-
-    /* 简版条形图 */
-    printf("\n分数段分布图:\n");
-    displayBarChart("优秀", excellentAll, studentCount);
-    displayBarChart("良好", goodAll,      studentCount);
-    displayBarChart("中等", mediumAll,    studentCount);
-    displayBarChart("及格", passAll,      studentCount);
-    displayBarChart("不及格", failAll,    studentCount);
-
-    printf("\n");
 }
 
-/*------------------------------------------------------------
- * 工具：绘制单行条形图
- * label：分数段名称
- * count：该段人数
- * total：总人数
- *----------------------------------------------------------*/
-void displayBarChart (const char* label, int count, int total) {
-    /* 按比例缩放到 20 个字符宽度 */
-    int bars = (count * 20) / total;
-    if (bars == 0 && count > 0) bars = 1;  // 有人就至少显示 1 格
-
-    printf("%s: ", label);
-    for (int i = 0; i < bars; i++) {
-        printf("█");
-    }
-    printf(" %d人\n", count);
-}
 // 班级统计
 void calculateClassStatistics() {
     if (studentCount == 0) return;
@@ -845,47 +822,24 @@ void saveToFile(const char* filename) {
         return;
     }
 
-    // 写入文件头信息（说明文件格式）
-    fprintf(file, "# 学生成绩管理系统数据文件\n");
-    fprintf(file, "# 保存时间：%s\n", getCurrentTime());
-    fprintf(file, "# 数据格式：学号 姓名 班级 语文 数学 英语 音乐 体育\n");
-    fprintf(file, "# 注意：总分和平均分会在加载时自动计算\n");
-    fprintf(file, "# =========================================\n");
-
-    int savedCount = 0;  // 记录成功保存的学生数量
 
     // 遍历所有学生，逐个保存到文件
     for (int i = 0; i < studentCount; i++) {
-        // 将学生数据格式化为一行文本写入文件
-        // 只保存基本信息，总分和平均分在加载时重新计算
-        int writeResult = fprintf(file, "%d %s %s %.1f %.1f %.1f %.1f %.1f\n",
-                    students[i].id,
-                    students[i].name,
-                    students[i].className,
-                    students[i].chinese,
-                    students[i].math,
-                    students[i].english,
-                    students[i].music,
-                    students[i].physical);
-
-        // 检查是否写入成功
-        if (writeResult > 0) {
-            savedCount++;  // 成功保存一个学生
-        } else {
-            printf("警告：写入第%d个学生数据时发生错误。\n", i + 1);
-        }
+        fprintf(file, "%d %s %s %.1f %.1f %.1f %.1f %.1f\n",
+                  students[i].id,
+                  students[i].name,
+                  students[i].className,
+                  students[i].chinese,
+                  students[i].math,
+                  students[i].english,
+                  students[i].music,
+                  students[i].physical);
     }
-
     // 关闭文件（重要：确保数据真正写入磁盘）
     fclose(file);
 
     // 显示保存结果
-    if (savedCount == studentCount) {
-        printf("成功保存 %d 个学生的数据到文件：%s\n", savedCount, filename);
-    } else {
-        printf("保存不完整，成功保存 %d/%d 个学生到文件：%s\n",
-               savedCount, studentCount, filename);
-    }
+        printf("成功保存 %d 个学生的数据到文件：%s\n", studentCount, filename);
 }
 
 /**
@@ -910,145 +864,43 @@ void loadFromFile(const char* filename) {
         return;
     }
 
-    // 备份当前数据（重要：防止加载失败时丢失原有数据）
-    Student backupStudents[MAX_STUDENTS];
-    int backupCount = studentCount;
-    for (int i = 0; i < studentCount; i++) {
-        backupStudents[i] = students[i];
-    }
-
     // 重置学生计数器，开始加载新数据
     studentCount = 0;
-    int loadedCount = 0;  // 记录成功加载的学生数量
-    char line[256];       // 缓冲区，用于存储每行文本
-
-    printf("正在从文件加载数据...\n");
-
-    // 逐行读取文件内容
-    while (fgets(line, sizeof(line), file)) {
-        // 检查是否已达到最大学生数量
-        if (studentCount >= MAX_STUDENTS) {
-            printf("警告：已达到最大学生数量 %d，停止加载更多数据。\n", MAX_STUDENTS);
-            break;
-        }
-
-        // 跳过注释行和空行
-        if (line[0] == '#' || line[0] == '\n') {
-            continue;
-        }
-
-        // 创建新的学生变量来存储加载的数据
+    // 读取每个学生
+    while (studentCount < MAX_STUDENTS) {
         Student newStudent;
 
-        // 从文本行中解析学生数据
-        // sscanf返回值表示成功解析的字段数量
-        int parsedFields = sscanf(line, "%d %49s %19s %f %f %f %f %f",
-                           &newStudent.id,           // 学号
-                           newStudent.name,          // 姓名
-                           newStudent.className,     // 班级
-                           &newStudent.chinese,      // 语文成绩
-                           &newStudent.math,         // 数学成绩
-                           &newStudent.english,      // 英语成绩
-                           &newStudent.music,        // 音乐成绩
-                           &newStudent.physical);    // 体育成绩
+        // 尝试读取一行数据
+        int result = fscanf(file, "%d %s %s %f %f %f %f %f",
+                           &newStudent.id,
+                           newStudent.name,
+                           newStudent.className,
+                           &newStudent.chinese,
+                           &newStudent.math,
+                           &newStudent.english,
+                           &newStudent.music,
+                           &newStudent.physical);
 
-        // 检查是否成功解析了所有8个字段
-        if (parsedFields == 8) {
-            // 数据验证阶段
-
-            // 1. 验证学号是否为正数
-            if (newStudent.id <= 0) {
-                printf("警告：跳过学号无效的学生（学号：%d）\n", newStudent.id);
-                continue;
-            }
-
-            // 2. 验证学号是否重复
-            int duplicate = 0;
-            for (int i = 0; i < studentCount; i++) {
-                if (students[i].id == newStudent.id) {
-                    printf("警告：跳过学号重复的学生（学号：%d）\n", newStudent.id);
-                    duplicate = 1;
-                    break;
-                }
-            }
-            if (duplicate) {
-                continue;
-            }
-
-            // 3. 验证各科成绩是否在合理范围内（0-100分）
-            if (newStudent.chinese < 0 || newStudent.chinese > 100 ||
-                newStudent.math < 0 || newStudent.math > 100 ||
-                newStudent.english < 0 || newStudent.english > 100 ||
-                newStudent.music < 0 || newStudent.music > 100 ||
-                newStudent.physical < 0 || newStudent.physical > 100) {
-                printf("警告：跳过成绩无效的学生（学号：%d）\n", newStudent.id);
-                continue;
-            }
-
-            // 所有验证通过，将学生添加到数组
-            // 先计算总分和平均分
+        // 如果读取成功（8个字段），添加到数组
+        if (result == 8) {
+            // 计算总分和平均分
             calculateStudentTotal(&newStudent);
 
-            // 添加到学生数组
             students[studentCount] = newStudent;
             studentCount++;
-            loadedCount++;
-
         } else {
-            // 解析失败，可能是文件格式错误
-            printf("警告：跳过格式错误的数据行：%s", line);
+            // 读取失败，可能是文件结束了
+            break;
         }
     }
 
-    // 关闭文件
     fclose(file);
-
-    // 显示加载结果
-    if (loadedCount > 0) {
-        printf("? 成功加载 %d 个学生的数据\n", loadedCount);
-        printf("当前共有 %d 个学生\n", studentCount);
-    } else {
-        // 加载失败，恢复备份数据
-        studentCount = backupCount;
-        for (int i = 0; i < studentCount; i++) {
-            students[i] = backupStudents[i];
-        }
-        printf("? 加载失败，没有找到有效数据，已恢复原有数据\n");
-    }
-}
-/**
- * 获取当前时间的字符串表示
- * @return 返回当前时间的字符串（格式：YYYY-MM-DD HH:MM:SS）
- *
- * 功能说明：
- * 用于在保存文件时记录时间戳
- */
-const char* getCurrentTime() {
-    static char timeStr[100];  // 静态变量，保证返回的指针有效
-    time_t now = time(NULL);   // 获取当前时间
-    struct tm *t = localtime(&now);  // 转换为本地时间结构
-
-    // 格式化时间字符串
-    strftime(timeStr, sizeof(timeStr), "%Y-%m-%d %H:%M:%S", t);
-    return timeStr;
+    printf("已加载 %d 个学生从 %s\n", studentCount, filename);
 }
 
-/**
- * 检查文件是否存在
- * @param filename 要检查的文件名
- * @return 1-文件存在，0-文件不存在
- *
- * 功能说明：
- * 用于在加载文件前检查文件是否存在
- */
-int fileExists(const char* filename) {
-    FILE *file = fopen(filename, "r");
-    if (file) {
-        fclose(file);  // 文件存在，立即关闭
-        return 1;
-    }
-    return 0;  // 文件不存在
-}
+
+
+
 /**
  * 文件操作菜单
  *
@@ -1083,13 +935,6 @@ void fileOperationsMenu() {
                 // 从文件加载数据
                 printf("请输入要加载的文件名: ");
                 scanf("%s", filename);
-
-                // 检查文件是否存在
-                if (fileExists(filename)) {
-                    loadFromFile(filename);
-                } else {
-                    printf("错误：文件 %s 不存在！\n", filename);
-                }
                 break;
 
             case 0:
