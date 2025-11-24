@@ -1,83 +1,134 @@
 #include <stdio.h>
-#include " student.h"
+#include <string.h>
+#include <stdlib.h>
+#include <windows.h>
+#include "student.h"
+#include "user.h"
 
-/**
- * ÏÔÊ¾ÏµÍ³Ö÷²Ëµ¥
- *
- * ¹¦ÄÜËµÃ÷£º
- * ÏÔÊ¾ËùÓĞ¿ÉÓÃµÄ¹¦ÄÜÑ¡Ïî
- * ÓÃ»§Í¨¹ıÊäÈëÊı×ÖÑ¡ÔñÏàÓ¦¹¦ÄÜ
- */
-void displayMenu() {
-    printf("\n¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T\n");
-    printf("            Ñ§Éú³É¼¨¹ÜÀíÏµÍ³\n");
-    printf("¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T\n");
-    printf("1. Ìí¼ÓÑ§Éú\n");
-    printf("2. ÏÔÊ¾ËùÓĞÑ§Éú\n");
-    printf("3. ²éÕÒÑ§Éú\n");
-    printf("4. ĞŞ¸ÄÑ§ÉúĞÅÏ¢\n");
-    printf("5. É¾³ıÑ§Éú\n");
-    printf("6. Í³¼ÆĞÅÏ¢\n");
-    printf("7. ÎÄ¼ş²Ù×÷£¨±£´æ/¼ÓÔØ£©\n");  // ĞÂÔöÎÄ¼ş²Ù×÷Ñ¡Ïî
-    printf("0. ÍË³öÏµÍ³\n");
-    printf("¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T¨T\n");
-    printf("ÇëÑ¡Ôñ²Ù×÷ (0-7): ");
-}
+// æ˜¾ç¤ºåˆå§‹èœå•ï¼ˆç™»å½•/æ³¨å†Œï¼‰
+void showLoginMenu() {
+    int choice;
+    int isRunning = 1;
 
-/**
- * ³ÌĞòÖ÷º¯Êı
- *
- * ¹¦ÄÜËµÃ÷£º
- * 1. ³õÊ¼»¯ÏµÍ³
- * 2. ÏÔÊ¾Ö÷²Ëµ¥²¢´¦ÀíÓÃ»§Ñ¡Ôñ
- * 3. Ñ­»·ÔËĞĞÖ±µ½ÓÃ»§Ñ¡ÔñÍË³ö
- * 4. ÍË³öÇ°ÌáÊ¾±£´æÊı¾İ
- */
-int main() {
-    int choice;  // ´æ´¢ÓÃ»§µÄÑ¡Ôñ
+    // åˆå§‹åŒ–ç”¨æˆ·ç³»ç»Ÿ
+    initUserSystem();
+    loadUsersFromFile(); // å°è¯•åŠ è½½å·²ä¿å­˜çš„ç”¨æˆ·
 
-    // ÏµÍ³³õÊ¼»¯
-    initializeSystem();
-    printf("Ñ§Éú³É¼¨¹ÜÀíÏµÍ³ÒÑÆô¶¯\n");
-    printf("ÌáÊ¾£ºÄú¿ÉÒÔÊ¹ÓÃÎÄ¼ş²Ù×÷²Ëµ¥À´±£´æºÍ¼ÓÔØÊı¾İ\n");
+    while (isRunning) {
+        system("cls");
+        printf("\n\n");
+        printf("==============================================================\n");
+        printf("|                    å­¦ç”Ÿæˆç»©ç®¡ç†ç³»ç»Ÿ                        |\n");
+        printf("==============================================================\n");
+        printf("\n");
+        printf("====================== ç³»ç»Ÿç™»å½•èœå• ==========================\n");
+        printf("                                                            \n");
+        printf("              1. ç™»å½•ç³»ç»Ÿ                                   \n");
+        printf("              2. æ³¨å†Œè´¦å·                                   \n");
+        printf("              0. é€€å‡ºç¨‹åº                                   \n");
+        printf("                                                            \n");
+        printf("==============================================================\n");
+        printf("\n");
+        printf("è¯·é€‰æ‹©æ“ä½œ (0-2): ");
 
-    // Ö÷Ñ­»·£ºÏÔÊ¾²Ëµ¥²¢´¦ÀíÓÃ»§Ñ¡Ôñ
-    do {
-        displayMenu();     // ÏÔÊ¾²Ëµ¥
-        scanf("%d", &choice);  // »ñÈ¡ÓÃ»§Ñ¡Ôñ
+        // ä¿®æ­£ï¼šç§»é™¤%då‰çš„ç©ºæ ¼
+        scanf("%d", &choice);
 
-        // ¸ù¾İÓÃ»§Ñ¡ÔñÖ´ĞĞÏàÓ¦¹¦ÄÜ
-        switch(choice) {
+        // æ¶ˆè€—è¾“å…¥ç¼“å†²åŒºå‰©ä½™å­—ç¬¦ï¼ˆåŒ…æ‹¬æ¢è¡Œç¬¦ï¼‰
+        while (getchar() != '\n');
+
+        switch (choice) {
             case 1:
-                addStudent();        // Ìí¼ÓÑ§Éú
+                if (loginUser()) {
+                    isRunning = 0; // ç™»å½•æˆåŠŸï¼Œé€€å‡ºå¾ªç¯
+                }
                 break;
             case 2:
-                displayAllStudents(); // ÏÔÊ¾ËùÓĞÑ§Éú
-                break;
-            case 3:
-                searchStudent();     // ²éÕÒÑ§Éú
-                break;
-            case 4:
-                updateStudent();     // ĞŞ¸ÄÑ§ÉúĞÅÏ¢
-                break;
-            case 5:
-                deleteStudent();     // É¾³ıÑ§Éú
-                break;
-            case 6:
-                calculateStatistics(); // Í³¼ÆĞÅÏ¢
-                break;
-            case 7:
-                fileOperationsMenu(); // ÎÄ¼ş²Ù×÷£¨ĞÂÔö£©
+                registerUser();
                 break;
             case 0:
+                printf("\næ„Ÿè°¢ä½¿ç”¨ï¼Œå†è§ï¼\n");
+                exit(0);
+            default:
+                printf("\næ— æ•ˆé€‰æ‹©ï¼Œè¯·é‡æ–°è¾“å…¥ï¼\n");
+                system("pause");
+        }
+    }
+}
 
+// æ˜¾ç¤ºä¸»èœå•ï¼ˆå­¦ç”Ÿç®¡ç†ï¼‰
+void showMainMenu() {
+    int choice;
+
+    // åˆå§‹åŒ–å­¦ç”Ÿç³»ç»Ÿ
+    initializeSystem();
+
+    do {
+        system("cls");
+        printf("\n");
+        printf("==============================================================\n");
+        printf("|                    å­¦ç”Ÿæˆç»©ç®¡ç†ç³»ç»Ÿ                        |\n");
+        printf("==============================================================\n");
+        printf("\n");
+        printf("====================== åŠŸèƒ½ä¸»èœå• ============================\n");
+        printf("                                                            \n");
+        printf("              1. æ·»åŠ å­¦ç”Ÿ      2. æ˜¾ç¤ºæ‰€æœ‰å­¦ç”Ÿ              \n");
+        printf("              3. æŸ¥æ‰¾å­¦ç”Ÿ      4. ä¿®æ”¹å­¦ç”Ÿä¿¡æ¯              \n");
+        printf("              5. åˆ é™¤å­¦ç”Ÿ      6. ç»Ÿè®¡ä¿¡æ¯                  \n");
+        printf("              7. æ–‡ä»¶æ“ä½œ      0. é€€å‡ºç³»ç»Ÿ                  \n");
+        printf("                                                            \n");
+        printf("==============================================================\n");
+        printf("\n");
+        printf("è¯·é€‰æ‹©æ“ä½œ (0-7): ");
+
+        scanf("%d", &choice);
+
+        // æ¶ˆè€—è¾“å…¥ç¼“å†²åŒºå‰©ä½™å­—ç¬¦
+        while (getchar() != '\n');
+
+        switch (choice) {
+            case 1:
+                addStudent();
+                break;
+            case 2:
+                displayAllStudents();
+                break;
+            case 3:
+                searchStudent();
+                break;
+            case 4:
+                updateStudent();
+                break;
+            case 5:
+                deleteStudent();
+                break;
+            case 6:
+                calculateStatistics();
+                break;
+            case 7:
+                fileOperationsMenu();
+                break;
+            case 0:
+                printf("\næ­£åœ¨é€€å‡ºç³»ç»Ÿ...\n");
+                Sleep(1000);
                 break;
             default:
-                printf(" ÎŞĞ§Ñ¡Ôñ£¬ÇëÊäÈë 0-7 Ö®¼äµÄÊı×Ö£¡\n");
+                printf("\næ— æ•ˆé€‰æ‹©ï¼è¯·é€‰æ‹© 0-7 ä¹‹é—´çš„æ•°å­—ã€‚\n");
         }
 
-    } while (choice != 0);  // ÓÃ»§Ñ¡Ôñ0Ê±ÍË³öÑ­»·
+        if (choice != 0) {
+            printf("\næŒ‰å›è½¦é”®ç»§ç»­...");
+            getchar();
+        }
+    } while (choice != 0);
+}
+
+int main() {
+    // æ˜¾ç¤ºç™»å½•èœå•
+    showLoginMenu();
+
+    // ç™»å½•æˆåŠŸåæ˜¾ç¤ºå­¦ç”Ÿç®¡ç†ä¸»èœå•
+    showMainMenu();
 
     return 0;
 }
-
